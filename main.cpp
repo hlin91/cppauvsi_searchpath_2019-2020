@@ -18,7 +18,7 @@
 // GPS to Cartesian conversion
 //================================================================
 std::vector<float_type> GPStoCartesian(const float_type, const float_type); // Converts GPS longitude and latitude to Cartesian coordinates with standard basis vectors and origin at the center of the Earth.
-Coord GPStoCoord(const float_type, const float_type); // Converts GPS longitude and latitude to Cartesian coordinates measured in meters using the Haversine formula.
+Coord GPStoCoord(const float_type, const float_type); // Converts GPS longitude and latitude to Cartesian coordinates measured in meters.
 void CoordtoGPS(const Coord&, float_type&, float_type&); // Converts a coordinate in our Cartesian system to GPS longitude and latitude
 inline void computeBasis(); // Compute the basis vectors for our Cartesian system. Make sure this is run at the start of main.
 inline float_type toRadians(float_type); // Convert degrees to radians
