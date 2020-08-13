@@ -1,4 +1,4 @@
-Search Path Algorithm for Cal Poly Pomona AUVSI 2019-
+Search Path Algorithm for Cal Poly Pomona AUVSI 2019-2020
 
 Compile-time Dependencies: None, but it is not standard for compilers to provide atof() under the cctype header so it may throw an error depending on the system
 
