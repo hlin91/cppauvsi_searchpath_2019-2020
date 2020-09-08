@@ -4,15 +4,16 @@ Compile-time Dependencies: None, but it is not standard for compilers to provide
 
 Usage: Just make sure all files are present in their expected paths and run the executable
 
-Configuration:
+Configuration: To configure behavior, edit Config.h
 ** Note: Make sure to recompile for changes to take effect. **
-- To change the output file path, change the #define statement for OUT_FILE in line 9 of main.cpp
-- To change the MissionPointsParsed file path, change the #define statement for MISSION_FILE in line 10 of main.cpp
-- To change the BoundaryPointsParsed file path, change the #define statement for BOUNDS_FILE in line 11 of main.cpp
-- To change the SearchGridPoints file path, change the #define statement for SEARCH_FILE in line 12 of main.cpp
-- To change the output altitude in feet, change the #define statement for ALTITUDE in line 14 of main.cpp
-- To change the assumed turn radius (in METERS) of the drone, change the #define statement for RADIUS in line 20 of Polygon.cpp
-- To change the offset spacing between each parallel sweep of a traversal (in METERS), change the #define statement for OFFSET in line 22 of Polygon.cpp
+- To change the output file path, change the #define statement for OUT_FILE
+- To change the MissionPointsParsed file path, change the #define statement for MISSION_FILE
+- To change the BoundaryPointsParsed file path, change the #define statement for BOUNDS_FILE
+- To change the SearchGridPoints file path, change the #define statement for SEARCH_FILE
+- To change the output altitude in feet, change the #define statement for ALTITUDE
+- To change the assumed turn radius (in METERS) of the drone, change the #define statement for RADIUS
+- To change the offset spacing between each parallel sweep of a traversal (in METERS), change the #define statement for OFFSET
+- To change the distance waypoints are scaled inward to avoid exiting the boundary, change the #define statement for CORRECTION
 
 Notes on Compilation:
 - Make sure not to forget the O2 flag when calling the compiler to enable compiler optimizations since it's free speed

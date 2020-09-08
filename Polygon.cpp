@@ -2,6 +2,7 @@
 // Polygon decomposition and traversal algorithm
 // All units are in meters
 //=============================================================================================
+#pragma once
 #include <iostream>
 #include <algorithm>
 #include <cmath>
@@ -14,12 +15,12 @@
 #include <cfloat>
 #include <utility>
 #include "Graph.cpp"
+#include "Config.h"
 
 #define PI 3.14159265358979323846
 #define EPSILON DBL_EPSILON
-#define RADIUS 36.6 // The turn radius of the drone in meters
 #define INF 1000000 // An effective infinity that will not overflow the float type.
-#define OFFSET RADIUS // The spacing between each sweep line in meters. Minimum value is RADIUS
+
 enum State {START_V1, START_V2, END_V1, END_V2}; // State representing which vertex we start the path from.
 typedef double float_type; // The representation of floats we will be using.
 
@@ -583,7 +584,6 @@ void traverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse convex p
 	}
     }
     Coord inter1, inter2; // The intersections of the sweep line with the polygon
-    const float_type correction = RADIUS; // The length to scale waypoints inwards to correct for turn radius
     unsigned int i = 0, j = 0;
     bool found1 = false, found2 = false; // Were intersections 1 and 2 found
     // The sweep line is currently collinear with width.e and extends to INF.
@@ -613,24 +613,24 @@ void traverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse convex p
 	    // Correct the x-coord
 	    if (inter2.x > inter1.x) // Waypoints are ordered left to right
 	    {
-		inter2.x -= abs(correction * cos(sweepLine.theta()));
-		inter1.x += abs(correction * cos(sweepLine.theta()));
+		inter2.x -= abs(CORRECTION * cos(sweepLine.theta()));
+		inter1.x += abs(CORRECTION * cos(sweepLine.theta()));
 	    }
 	    else // Waypoints are ordered right to left
 	    {
-		inter2.x += abs(correction * cos(sweepLine.theta()));
-		inter1.x -= abs(correction * cos(sweepLine.theta()));
+		inter2.x += abs(CORRECTION * cos(sweepLine.theta()));
+		inter1.x -= abs(CORRECTION * cos(sweepLine.theta()));
 	    }
 	    // Correct the y-coord
 	    if (inter2.y > inter1.y)
 	    {
-		inter2.y -= abs(correction * sin(sweepLine.theta()));
-		inter1.y += abs(correction * sin(sweepLine.theta()));
+		inter2.y -= abs(CORRECTION * sin(sweepLine.theta()));
+		inter1.y += abs(CORRECTION * sin(sweepLine.theta()));
 	    }
 	    else
 	    {
-		inter2.y += abs(correction * sin(sweepLine.theta()));
-		inter1.y -= abs(correction * sin(sweepLine.theta()));
+		inter2.y += abs(CORRECTION * sin(sweepLine.theta()));
+		inter1.y -= abs(CORRECTION * sin(sweepLine.theta()));
 	    }
 	    // Check if the waypoints have crossed each other after correction
 	    Edge afterCorr(inter1, inter2); // The path after correction

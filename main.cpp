@@ -6,12 +6,7 @@
 #include <iomanip>
 
 #define EARTH_RADIUS 6378137 // Radius of the Earth in meters
-#define OUT_FILE "C:\\Users\\Public\\Downloads\\InteropCode\\interop\\MissionPointsWithSearch.txt" // Our output file path
-#define MISSION_FILE "C:\\Users\\Public\\Downloads\\InteropCode\\interop\\MissionPointsParsed.txt" // Mission points file path
-#define BOUNDS_FILE "C:\\Users\\Public\\Downloads\\InteropCode\\interop\\BoundaryPoints.txt" // Boundary points file path
-#define SEARCH_FILE "C:\\Users\\Public\\Downloads\\InteropCode\\interop\\SearchGridParsed.txt" // Search grid points file path
 #define BUFF_MAX 30 // Max size of c-string buffer
-#define ALTITUDE 150 // Output altitude in feet
 
 //================================================================
 // Prototypes, Constants, and Global Variables for
