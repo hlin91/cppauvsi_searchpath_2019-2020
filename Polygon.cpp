@@ -957,7 +957,6 @@ std::list<Coord> pathTo(const Coord &point1, const Coord &point2, const Polygon 
 
 void naiveTraverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse the polygon using a simple East-West traversal
 {
-    // TODO: Implement this
     // The logic for this is just a slight modification of traverse()
     assert(p.size() > 2);
     Span width = getWidth(p);
@@ -1000,37 +999,18 @@ void naiveTraverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse the
 	    // Correct the x-coord
 	    if (inter2.x > inter1.x) // Waypoints are ordered left to right
 	    {
-		inter2.x -= abs(CORRECTION * cos(sweepLine.theta()));
-		inter1.x += abs(CORRECTION * cos(sweepLine.theta()));
+		inter2.x -= CORRECTION;
+                inter1.x += CORRECTION;
 	    }
 	    else // Waypoints are ordered right to left
 	    {
-		inter2.x += abs(CORRECTION * cos(sweepLine.theta()));
-		inter1.x -= abs(CORRECTION * cos(sweepLine.theta()));
-	    }
-	    // Correct the y-coord
-	    if (inter2.y > inter1.y)
-	    {
-		inter2.y -= abs(CORRECTION * sin(sweepLine.theta()));
-		inter1.y += abs(CORRECTION * sin(sweepLine.theta()));
-	    }
-	    else
-	    {
-		inter2.y += abs(CORRECTION * sin(sweepLine.theta()));
-		inter1.y -= abs(CORRECTION * sin(sweepLine.theta()));
+		inter2.x += CORRECTION;
+		inter1.x -= CORRECTION;
 	    }
 	    // Check if the waypoints have crossed each other after correction
 	    Edge afterCorr(inter1, inter2); // The path after correction
-	    if (abs(beforeCorr.theta()) < EPSILON) // For horizontal paths, simply check the x-coords
-	    {
-		if ((beforeCorr.v1.x > beforeCorr.v2.x && afterCorr.v1.x < afterCorr.v2.x) || (beforeCorr.v1.x < beforeCorr.v2.x && afterCorr.v1.x > afterCorr.v2.x))
-		    valid = false;
-	    }
-	    else // Else check if theta() changed signs
-	    {
-		if ((beforeCorr.theta() > 0 && afterCorr.theta() < 0) || (beforeCorr.theta() < 0 && afterCorr.theta() > 0))
-		    valid = false;
-	    }
+            if ((beforeCorr.v1.x > beforeCorr.v2.x && afterCorr.v1.x < afterCorr.v2.x) || (beforeCorr.v1.x < beforeCorr.v2.x && afterCorr.v1.x > afterCorr.v2.x))
+                valid = false;
 	    // Add the waypoints to the list
 	    if (valid)
 	    {
@@ -1051,62 +1031,14 @@ void naiveTraverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse the
 // int main(int argc, char **argv) // Test driver
 // {
 //     Polygon p;
-//     std::list<Polygon> l;
-//     // Simple test case
-//     p.addVert(Coord(0, 0));
-//     p.addVert(Coord(100, 0));
-//     p.addVert(Coord(100, 50));
-//     p.addVert(Coord(75, 25));
-//     p.addVert(Coord(25, 25));
-//     p.addVert(Coord(0, 50));
-//     // Complex test case
-//      // p.addVert(Coord(41, 23));
-//      // p.addVert(Coord(38, 28));
-//      // p.addVert(Coord(52, 48));
-//      // p.addVert(Coord(20, 62));
-//      // p.addVert(Coord(-20, 61));
-//      // p.addVert(Coord(-12, 36));
-//      // p.addVert(Coord(-33, 20));
-//      // p.addVert(Coord(-62, 3));
-//      // p.addVert(Coord(-61, -23));
-//      // p.addVert(Coord(59, -33));
-//      // p.addVert(Coord(106, -12));
-//      // p.addVert(Coord(107, 22));
-//     // Testing decomposition
-//     // Span s = getWidth(p);
-//     // std::cout << "Width Information:\n";
-//     // std::cout << "Vertex 1: " << s.e.v1.str() << '\n';
-//     // std::cout << "Vertex 2: " << s.e.v2.str() << '\n';
-//     // std::cout << "Antipodal Vertex: " << s.v.str() << '\n';
-//     // std::cout << "Length: " << s.length() << '\n';
-//     // std::cout << "Edge Theta: " << s.e.theta() << '\n';
-//     // std::cout << "Span Theta: " << (s.e.theta() + (PI / 2.0)) << '\n';
-//      // decompose(p, l);
-//      // std::list<Polygon>::iterator it = l.begin();
-//      // unsigned int i = 0;
-//      // while (it != l.end())
-//      // 	 std::cout << "Polygon " << i++ << " Size " << it->size() << ":\n" << (it++)->str();
-//     // mergeSubregions(l);
-//     // it = l.begin();
-//     // i = 0;
-//     // while (it != l.end())
-//     // 	 std::cout << "Polygon " << i++ << " Size " << it->size() << ":\n" << (it++)->str();
-//     // Testing searchPath
-//      //  std::list<Edge> path;
-//      // traverse(p, path);
-//      // std::cout << "Path Length: " << path.size() << '\n';
-//      // for (std::list<Edge>::iterator it = path.begin(); it != path.end(); ++it)
-//      // 	 std::cout << (*it).v1.str() << ' ' << (*it).v2.str() << std::endl;
-//      // std::cout << "Merging subregions...\n";
-//      // std::list<Coord> path = searchPath(p);
-//      // std::ofstream outFile("waypoints.txt");
-//      // std::cout << "Total waypoints: " << path.size() << '\n';
-//      // for (std::list<Coord>::iterator it = path.begin(); it != path.end(); ++it)
-//      // 	 outFile << it->str() << '\n';
-//     // Testing pathTo
-//     Coord p1(90, 35), p2(10, 35);
-//     std::list<Coord> path = pathTo(p2, p1, p);
-//     for (auto &point : path)
-// 	std::cout << point.str() << '\n';
-//      return 0;
+//     p.addVert(Coord(2, 5));
+//     p.addVert(Coord(6, 7));
+//     p.addVert(Coord(7.5, 7));
+//     p.addVert(Coord(5, 2));
+//     std::list<Edge> w;
+//     naiveTraverse(p, w);
+//     std::cout << w.size() << std::endl;
+//     for (auto itr = w.begin(); itr != w.end(); ++itr)
+//         std::cout << itr->v1.str() << "    " << itr->v2.str() << std::endl;
+//     return 0;
 // }
