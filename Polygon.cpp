@@ -70,12 +70,6 @@ struct Coord // Simple struct representing a coordinate
 	s << "(" << x << "," << y << ")";
 	return s.str();
     }
-    Coord& operator=(const Coord &op)
-    {
-	x = op.x;
-	y = op.y;
-	return *this;
-    }
     bool operator==(const Coord &op) const
     { return ((x == op.x) && (y == op.y)); }
     bool operator !=(const Coord &op) const
@@ -588,8 +582,8 @@ void traverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse convex p
     bool found1 = false, found2 = false; // Were intersections 1 and 2 found
     // The sweep line is currently collinear with width.e and extends to INF.
     // Repeatedly find the intersections of the sweep line + OFFSET and store the intersections as waypoints until we do not find anymore intersections.
-    sweepLine.v1.x += (OFFSET / 2) * cos(width.theta()); sweepLine.v2.x += OFFSET * cos(width.theta()); // Initially offset the position of the sweep line by OFFSET / 2
-    sweepLine.v1.y += (OFFSET / 2) * sin(width.theta()); sweepLine.v2.y += OFFSET * sin(width.theta());
+    sweepLine.v1.x += OFFSET * cos(width.theta()); sweepLine.v2.x += OFFSET * cos(width.theta()); // Initially offset the position of the sweep line by OFFSET / 2
+    sweepLine.v1.y += OFFSET * sin(width.theta()); sweepLine.v2.y += OFFSET * sin(width.theta());
     do
     {
 	i = 0;
@@ -959,6 +953,99 @@ std::list<Coord> pathTo(const Coord &point1, const Coord &point2, const Polygon 
     result.pop_front(); // Remove the terminal points
     result.pop_back();
     return result;
+}
+
+void naiveTraverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse the polygon using a simple East-West traversal
+{
+    // TODO: Implement this
+    // The logic for this is just a slight modification of traverse()
+    assert(p.size() > 2);
+    Span width = getWidth(p);
+    Edge sweepLine;
+    int minY;
+    // Find the vertex in the polygon with the minimum y value
+    minY = p.v[0].y;
+    for (unsigned int i = 1; i < p.size(); ++i)
+        if (p.v[i].y < minY)
+            minY = p.v[i].y;
+    // Define infinite horizontal sweep line
+    sweepLine.v1 = Coord(-INF, minY);
+    sweepLine.v2 = Coord(INF, minY);
+    Coord inter1, inter2; // The intersections of the sweep line with the polygon
+    unsigned int i = 0, j = 0;
+    bool found1 = false, found2 = false; // Were intersections 1 and 2 found
+    // Repeatedly find the intersections of the sweep line + OFFSET and store the intersections as waypoints until we do not find anymore intersections.
+    // Initially offset the position of the sweep line by OFFSET / 2
+    sweepLine.v1.y += (OFFSET / 2.0); sweepLine.v2.y += (OFFSET / 2.0);
+    do
+    {
+	i = 0;
+	found1 = false;
+	found2 = false;
+	do
+	{ // Find the first intersection
+	    found1 = intersection(sweepLine, p.edge(i), inter1);
+	    ++i;
+	} while (i < p.size() && (!found1));
+	while (i < p.size() && (!found2))
+	{ // Find the second intersection
+	    found2 = intersection(sweepLine, p.edge(i), inter2);
+	    ++i;
+	}
+	if (found1 && found2)
+	{
+	    bool valid = true; // Is this pair of waypoints still valid after correction
+	    Edge beforeCorr(inter1, inter2); // The edge representing the path before correction
+	    // Shift waypoints inward to account for turn radius
+	    // Correct the x-coord
+	    if (inter2.x > inter1.x) // Waypoints are ordered left to right
+	    {
+		inter2.x -= abs(CORRECTION * cos(sweepLine.theta()));
+		inter1.x += abs(CORRECTION * cos(sweepLine.theta()));
+	    }
+	    else // Waypoints are ordered right to left
+	    {
+		inter2.x += abs(CORRECTION * cos(sweepLine.theta()));
+		inter1.x -= abs(CORRECTION * cos(sweepLine.theta()));
+	    }
+	    // Correct the y-coord
+	    if (inter2.y > inter1.y)
+	    {
+		inter2.y -= abs(CORRECTION * sin(sweepLine.theta()));
+		inter1.y += abs(CORRECTION * sin(sweepLine.theta()));
+	    }
+	    else
+	    {
+		inter2.y += abs(CORRECTION * sin(sweepLine.theta()));
+		inter1.y -= abs(CORRECTION * sin(sweepLine.theta()));
+	    }
+	    // Check if the waypoints have crossed each other after correction
+	    Edge afterCorr(inter1, inter2); // The path after correction
+	    if (abs(beforeCorr.theta()) < EPSILON) // For horizontal paths, simply check the x-coords
+	    {
+		if ((beforeCorr.v1.x > beforeCorr.v2.x && afterCorr.v1.x < afterCorr.v2.x) || (beforeCorr.v1.x < beforeCorr.v2.x && afterCorr.v1.x > afterCorr.v2.x))
+		    valid = false;
+	    }
+	    else // Else check if theta() changed signs
+	    {
+		if ((beforeCorr.theta() > 0 && afterCorr.theta() < 0) || (beforeCorr.theta() < 0 && afterCorr.theta() > 0))
+		    valid = false;
+	    }
+	    // Add the waypoints to the list
+	    if (valid)
+	    {
+		// If j is even, make pair (inter1, inter2), else (inter2, inter1)
+		if ((j % 2) == 0)
+		    waypoints.push_back(Edge(inter1, inter2)); 
+		else
+		    waypoints.push_back(Edge(inter2, inter1));
+	    }
+	}
+	// OFFSET the sweep line
+	// std::cout << "Offset: " << "(" << OFFSET * cos(width.theta()) << "," << OFFSET * sin(width.theta()) << ")\n";
+	sweepLine.v1.y += (OFFSET / 2.0); sweepLine.v2.y += (OFFSET / 2.0);
+	++j;
+    } while (found1);
 }
 
 // int main(int argc, char **argv) // Test driver
