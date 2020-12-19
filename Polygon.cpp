@@ -22,7 +22,7 @@
 #define INF 1000000 // An effective infinity that will not overflow the float type.
 
 enum State {START_V1, START_V2, END_V1, END_V2}; // State representing which vertex we start the path from.
-typedef double float_type; // The representation of floats we will be using.
+
 
 //============================================================
 // Prototypes
