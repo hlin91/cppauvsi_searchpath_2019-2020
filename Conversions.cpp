@@ -7,6 +7,7 @@
 // Prototypes, Constants, and Global Variables for
 // GPS to Cartesian conversion
 //================================================================
+void init(float_type, float_type); // Initialize global variables
 std::vector<float_type> GPStoCartesian(const float_type, const float_type); // Converts GPS longitude and latitude to Cartesian coordinates with standard basis vectors and origin at the center of the Earth.
 Coord GPStoCoord(const float_type, const float_type); // Converts GPS longitude and latitude to Cartesian coordinates measured in meters.
 void CoordtoGPS(const Coord&, float_type&, float_type&); // Converts a coordinate in our Cartesian system to GPS longitude and latitude
@@ -29,6 +30,13 @@ namespace global // Global constants used to keep function calls simple
 //================================================================
 // Definitions
 //================================================================
+void init(float_type longitude, float_type latitude)
+{
+    global::REF_LONG = longitude;
+    global::REF_LAT = latitude;
+    global::refCart = GPStoCartesian(global::REF_LONG, global::REF_LAT);
+}
+
 std::vector<float_type> GPStoCartesian(const float_type longitude, const float_type latitude) // Converts GPS to 3D Cartesian coordinates with standard basis vectors
 { // IMPORTANT: Assumes longitude and latitude are given in radians
     // Reference: https://en.wikipedia.org/wiki/Geographic_coordinate_conversion#From_geodetic_to_ECEF_coordinates
