@@ -2,7 +2,10 @@ Search Path Algorithm for Cal Poly Pomona AUVSI 2019-2020
 
 Compile-time Dependencies: None, but it is not standard for compilers to provide atof() under the cctype header so it may throw an error depending on the system
 
-Usage: Just make sure all files are present in their expected paths and run the executable
+Usage:
+ Make sure all files are present in their expected paths and run the executable.
+ To use naive path generation with no decomposition, pass the optional argument "naive" when calling the executable.
+ To use path generation with decomposition, pass no argument or pass the optional argument "decomp".
 
 Configuration: To configure behavior, edit Config.h
 ** Note: Make sure to recompile for changes to take effect. **
