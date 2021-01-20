@@ -1,18 +1,24 @@
-//================================================================
+// ---
 // Main driver for search path generation
-//================================================================
+// Pass the optional argument "naive" to use naive path generation with no decomposition
+// Pass either no argument or "decomp" to use path generation with convex polygon decomposition
+// ---
 #include "Polygon.cpp"
 #include "Conversions.cpp"
 #include <cctype>
 #include <iomanip>
 
-#define BUFF_MAX 30 // Max size of c-string buffer
-
-//================================================================
+// ---
 // Main
-//================================================================
-int main()
+// ---
+int main(int argc, char **argv)
 {
+    if (argc > 2)
+    {
+        std::cout << "Error: Too many arguments passed\n";
+        return 1;
+    }
+    
     float_type altitude;
     int ordinal;
     float_type longitude, latitude;
@@ -30,22 +36,22 @@ int main()
     if (!missionFile)
     {
 	std::cout << "Could not open mission file.\n";
-	    return 1;
+        return 1;
     }
     if (!searchFile)
     {
-	    std::cout << "Could not open search grid file.\n";
-	    return 1;
+        std::cout << "Could not open search grid file.\n";
+        return 1;
     }
     if (!boundsFile)
     {
-	    std::cout << "Could not open boundary points file.\n";
-	    return 1;
+        std::cout << "Could not open boundary points file.\n";
+        return 1;
     }
     if (!outFile)
     {
-	    std::cout << "Could not create output file.\n";
-	    return 1;
+        std::cout << "Could not create output file.\n";
+        return 1;
     }
     
     // Read from searchFile
@@ -110,13 +116,27 @@ int main()
     lastMissionPoint = GPStoCoord(longitude, latitude);
 
     // Generate paths
-    path = searchPath(searchArea);
+    if (argc == 1) // Default behavior for no arguments. Use decomposition
+        path = searchPath(searchArea);
+    else
+    {
+        if (strcmp(argv[1], "naive")) // Use naive traversal
+            path = naivePath(searchArea);
+        else if (strcmp(argv[1], "decomp")) // Use decomposition
+            path = searchPath(searchArea);
+        else
+        {
+            std::cout << "Error: Invalid arugment passed\n";
+            std::cout << "Available options: naive, decomp\n";
+            return 1;
+        }
+    }
     intermPath = pathTo(lastMissionPoint, path.front(), boundary);
 
     // Write output
     for (std::list<Coord>::iterator it = intermPath.begin(); it != intermPath.end(); ++it)
     {
-	    CoordtoGPS(*it, longitude, latitude);
+        CoordtoGPS(*it, longitude, latitude);
 	if (i != 1)
 	    outFile << ',';
         outFile << i << ',' << toDegrees(latitude) << ',' << toDegrees(longitude) << ',' << ALTITUDE;
@@ -124,7 +144,7 @@ int main()
     }
     for (std::list<Coord>::iterator it = path.begin(); it != path.end(); ++it)
     {
-	    CoordtoGPS(*it, longitude, latitude);
+        CoordtoGPS(*it, longitude, latitude);
 	if (i != 1)
 	    outFile << ',';
         outFile << i << ',' << toDegrees(latitude) << ',' << toDegrees(longitude) << ',' << ALTITUDE;

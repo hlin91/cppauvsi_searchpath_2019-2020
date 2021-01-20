@@ -51,6 +51,8 @@ void computeStates(std::list<unsigned int>&, Graph<Node, float_type>&); // Deter
 std::list<Coord> searchPath(const Polygon&); // Generates the search path for polygon p and returns it as a list of coords.
 bool clockwise(const std::vector<Coord>&); // Returns true if coordinates are in clockwise order, else false. Assumes +y axis points upwards.
 std::list<Coord> pathTo(const Coord&, const Coord&, const Polygon&); // Returns a path from point1 to point2 that does not intersect the boundary polygon
+void naiveTraverse(const Polygon&, std::list<Edge>&); // Traverse the polygon using a simple East-West traversal
+std::list<Coord> naivePath(const Polygon&); // Generates a search path using naive traversal
 
 //============================================================
 // Structs
@@ -1026,6 +1028,19 @@ void naiveTraverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse the
 	sweepLine.v1.y += (OFFSET / 2.0); sweepLine.v2.y += (OFFSET / 2.0);
 	++j;
     } while (found1);
+}
+
+std::list<Coord> naivePath(const Polygon &p)
+{
+    std::list<Edge> waypoints;
+    std::list<Coord> path;
+    naiveTraverse(p, waypoints);
+    for (std::list<Edge>::iterator e = waypoints.begin(); e != waypoints.end(); ++e)
+    {
+        path.push_back(e->v1);
+        path.push_back(e->v2);
+    }
+    return path;
 }
 
 // int main(int argc, char **argv) // Test driver
