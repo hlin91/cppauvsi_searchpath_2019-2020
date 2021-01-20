@@ -10,4 +10,5 @@
 #define RADIUS 36.6 // The turn radius of the drone in meters
 #define OFFSET RADIUS // The spacing between each sweep line in meters. Minimum value is RADIUS
 #define CORRECTION RADIUS // Distance search path waypoints are scaled inward to avoid exiting the boundary
+#define BUFF_MAX 30 // Max size of lines read from mission files
 typedef double float_type; // The representation of floats we will be using.
