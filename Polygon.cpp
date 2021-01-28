@@ -961,7 +961,6 @@ void naiveTraverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse the
 {
     // The logic for this is just a slight modification of traverse()
     assert(p.size() > 2);
-    Span width = getWidth(p);
     Edge sweepLine;
     int minY;
     // Find the vertex in the polygon with the minimum y value
@@ -972,30 +971,33 @@ void naiveTraverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse the
     // Define infinite horizontal sweep line
     sweepLine.v1 = Coord(-INF, minY);
     sweepLine.v2 = Coord(INF, minY);
-    Coord inter1, inter2; // The intersections of the sweep line with the polygon
+    Coord inter; // The intersections of the sweep line with the polygon
     unsigned int i = 0, j = 0;
     bool found1 = false, found2 = false; // Were intersections 1 and 2 found
+    struct
+    {
+        bool operator()(Coord &c1, Coord &c2)
+        { return c1.x < c2.x; }
+    } cmp; // Compare the x values of coordinates
     // Repeatedly find the intersections of the sweep line + OFFSET and store the intersections as waypoints until we do not find anymore intersections.
     // Initially offset the position of the sweep line by OFFSET / 2
     sweepLine.v1.y += (OFFSET / 2.0); sweepLine.v2.y += (OFFSET / 2.0);
     do
     {
-	i = 0;
-	found1 = false;
-	found2 = false;
-	do
-	{ // Find the first intersection
-	    found1 = intersection(sweepLine, p.edge(i), inter1);
-	    ++i;
-	} while (i < p.size() && (!found1));
-	while (i < p.size() && (!found2))
-	{ // Find the second intersection
-	    found2 = intersection(sweepLine, p.edge(i), inter2);
-	    ++i;
-	}
-	if (found1 && found2)
+        std::vector<Coord> intersections;
+	for (unsigned int i = 0; i < p.size(); ++i)
+        {
+            if (intersection(p.edge(i), sweepLine, inter))
+                intersections.push_back(inter);
+        }
+	if (intersections.size() >= 2)
 	{
+            // There may be more than 2 intersections so we only want the ones with the min and max x-value
+            // To make this more readible, we'll just do a sort and find these in O(nlogn)
+            std::sort(intersections.begin(), intersections.end(), cmp);
 	    bool valid = true; // Is this pair of waypoints still valid after correction
+            Coord inter1 = intersections.front();
+            Coord inter2 = intersections.back();
 	    Edge beforeCorr(inter1, inter2); // The edge representing the path before correction
 	    // Shift waypoints inward to account for turn radius
 	    // Correct the x-coord
@@ -1024,7 +1026,6 @@ void naiveTraverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse the
 	    }
 	}
 	// OFFSET the sweep line
-	// std::cout << "Offset: " << "(" << OFFSET * cos(width.theta()) << "," << OFFSET * sin(width.theta()) << ")\n";
 	sweepLine.v1.y += (OFFSET / 2.0); sweepLine.v2.y += (OFFSET / 2.0);
 	++j;
     } while (found1);
