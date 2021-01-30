@@ -18,7 +18,6 @@
 #include "Config.h"
 
 #define PI 3.14159265358979323846
-#define EPSILON DBL_EPSILON
 #define INF 1000000 // An effective infinity that will not overflow the float type.
 
 enum State {START_V1, START_V2, END_V1, END_V2}; // State representing which vertex we start the path from.
