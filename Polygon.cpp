@@ -632,7 +632,7 @@ void traverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse convex p
 	    Edge afterCorr(inter1, inter2); // The path after correction
 	    if (abs(beforeCorr.theta()) < EPSILON) // For horizontal paths, simply check the x-coords
 	    {
-		if ((beforeCorr.v1.x > beforeCorr.v2.x && afterCorr.v1.x < afterCorr.v2.x) || (beforeCorr.v1.x < beforeCorr.v2.x && afterCorr.v1.x > afterCorr.v2.x))
+		if ((beforeCorr.v1.x > beforeCorr.v2.x && afterCorr.v1.x <= afterCorr.v2.x) || (beforeCorr.v1.x < beforeCorr.v2.x && afterCorr.v1.x >= afterCorr.v2.x))
 		    valid = false;
 	    }
 	    else // Else check if theta() changed signs
@@ -973,7 +973,7 @@ void naiveTraverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse the
     sweepLine.v2 = Coord(INF, minY);
     Coord inter; // The intersections of the sweep line with the polygon
     unsigned int i = 0, j = 0;
-    bool found1 = false, found2 = false; // Were intersections 1 and 2 found
+    bool found = true; // Did we find at least one intersection
     struct
     {
         bool operator()(Coord &c1, Coord &c2)
@@ -984,36 +984,33 @@ void naiveTraverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse the
     sweepLine.v1.y += (OFFSET / 2.0); sweepLine.v2.y += (OFFSET / 2.0);
     do
     {
+        found = false;
         std::vector<Coord> intersections;
 	for (unsigned int i = 0; i < p.size(); ++i)
         {
             if (intersection(p.edge(i), sweepLine, inter))
+            {
+                found = true; // Found at least one intersection
                 intersections.push_back(inter);
+            }
         }
 	if (intersections.size() >= 2)
 	{
             // There may be more than 2 intersections so we only want the ones with the min and max x-value
-            // To make this more readible, we'll just do a sort and find these in O(nlogn)
+            // To make this more compact, we'll just do a sort and find these in O(nlogn)
             std::sort(intersections.begin(), intersections.end(), cmp);
 	    bool valid = true; // Is this pair of waypoints still valid after correction
             Coord inter1 = intersections.front();
             Coord inter2 = intersections.back();
 	    Edge beforeCorr(inter1, inter2); // The edge representing the path before correction
 	    // Shift waypoints inward to account for turn radius
+            // Because we sorted, the waypoints will always be ordered left-right
 	    // Correct the x-coord
-	    if (inter2.x > inter1.x) // Waypoints are ordered left to right
-	    {
-		inter2.x -= CORRECTION;
-                inter1.x += CORRECTION;
-	    }
-	    else // Waypoints are ordered right to left
-	    {
-		inter2.x += CORRECTION;
-		inter1.x -= CORRECTION;
-	    }
+            inter2.x -= CORRECTION;
+            inter1.x += CORRECTION;
 	    // Check if the waypoints have crossed each other after correction
 	    Edge afterCorr(inter1, inter2); // The path after correction
-            if ((beforeCorr.v1.x > beforeCorr.v2.x && afterCorr.v1.x < afterCorr.v2.x) || (beforeCorr.v1.x < beforeCorr.v2.x && afterCorr.v1.x > afterCorr.v2.x))
+            if (afterCorr.v1.x >= afterCorr.v2.x)
                 valid = false;
 	    // Add the waypoints to the list
 	    if (valid)
@@ -1028,7 +1025,7 @@ void naiveTraverse(const Polygon &p, std::list<Edge> &waypoints) // Traverse the
 	// OFFSET the sweep line
 	sweepLine.v1.y += (OFFSET / 2.0); sweepLine.v2.y += (OFFSET / 2.0);
 	++j;
-    } while (found1);
+    } while (found);
 }
 
 std::list<Coord> naivePath(const Polygon &p)
@@ -1046,15 +1043,16 @@ std::list<Coord> naivePath(const Polygon &p)
 
 // int main(int argc, char **argv) // Test driver
 // {
+//     // Remember to change the value of OFFSET and CORRECTION in Config.h
 //     Polygon p;
-//     p.addVert(Coord(2, 5));
-//     p.addVert(Coord(6, 7));
-//     p.addVert(Coord(7.5, 7));
-//     p.addVert(Coord(5, 2));
-//     std::list<Edge> w;
-//     naiveTraverse(p, w);
-//     std::cout << w.size() << std::endl;
-//     for (auto itr = w.begin(); itr != w.end(); ++itr)
-//         std::cout << itr->v1.str() << "    " << itr->v2.str() << std::endl;
+//     p.addVert(Coord(0, 0));
+//     p.addVert(Coord(10, 0));
+//     p.addVert(Coord(10, 5));
+//     p.addVert(Coord(5, 2.5));
+//     p.addVert(Coord(0, 10));
+//     std::list<Coord> path = naivePath(p);
+//     std::cout << path.size() << std::endl;
+//     for (auto &c : path)
+//         std::cout << "(" << c.x << "," << c.y << ")\n";
 //     return 0;
 // }
