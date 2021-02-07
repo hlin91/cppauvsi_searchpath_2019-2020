@@ -1,6 +1,6 @@
 <h1>Search Path Algorithm for Cal Poly Pomona AUVSI 2019-2020</h1>
 <p>
-  Based on the minimum width sum greedy recursive method outlined in the paper by Yan Li et al
+  Based on the minimum width sum greedy recursive method outlined in the <a href="https://www.sciencedirect.com/science/article/abs/pii/S0957415810001893">paper</a> by Yan Li et al.
 </p>
 <h2>Table of Contents</h2>
 <p>
