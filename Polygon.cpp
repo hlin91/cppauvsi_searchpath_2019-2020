@@ -1,7 +1,10 @@
-//=============================================================================================
-// Polygon decomposition and traversal algorithm classes and functions
-// All units are in meters
-//=============================================================================================
+/**
+ * @file Polygon.cpp
+ * @brief Polygon decomposition and traversal algorithm structs and functions.
+ * All units are in meters.
+ * @author Harvey Lin
+ */
+
 #pragma once
 #include <iostream>
 #include <algorithm>
@@ -17,14 +20,23 @@
 #include "Graph.cpp"
 #include "Config.h"
 
+/**
+ * @brief Approximate value for pi.
+ */
 #define PI 3.14159265358979323846
+/**
+ * @brief An effective infinity that will not overflow the float type.
+ * @see float_type
+ */
 #define INF 1000000 // An effective infinity that will not overflow the float type.
 
-// State representing which vertex we start the path from.
-// START_V1 = start at vertex 1 of starting edge
-// START_V2 = start at vertex 2 of starting edge
-// END_V1 = start at vertex 1 of end edge
-// END_V2 = start at vertex 2 of end edge
+/**
+ * @brief State representing which vertex we start the path from.
+ * START_V1 = start at vertex 1 of starting edge
+ * START_V2 = start at vertex 2 of starting edge
+ * END_V1 = start at vertex 1 of end edge
+ * END_V2 = start at vertex 2 of end edge
+ */
 enum State {START_V1, START_V2, END_V1, END_V2};
 
 
@@ -37,102 +49,264 @@ struct Span; // A vertex-edge span of a polygon.
 struct Polygon; // A polygon consisting of a list of coordinates in CCW order.
 struct Node; // Node for the undirected weighted graph.
 
-// Find the distance between two vertices.
-float_type distance(const Coord&, const Coord&);
-// Find the distance between a vertex and an edge.
-float_type distance(const Coord&, const Edge&);
+/**
+ * @brief Find the distance between two vertices.
+ * @param v1 the first vertex
+ * @param v2 the second vertex
+ * @return the distance between the two vertices
+ * @see Coord float_type
+ */
+float_type distance(const Coord &v1, const Coord &v2);
+/**
+ * @brief  Find the distance between a vertex and an edge.
+ * @param v the vertex
+ * @param e the edge
+ * @return the distance between the vertex and edge
+ * @see Coord Edge float_type
+ */
+float_type distance(const Coord &v, const Edge &e);
 // Helper calculation for finding the width of a polygon.
-inline float_type deltaDistance(const Polygon&, int, int);
-// Find the width of a convex polygon.
-Span getWidth(const Polygon&);
-// Determine if a given vertex of a polygon is concave.
-// Params: polygon to consider, index of vertex to consider
-bool isConcave(const Polygon&, int);
-// Splits a polygon into two along the edge formed by the specified vertices.
-// Params: polygon to consider, index of first vertex of split edge, index of second vertex of split edge, references to store the result
-void split(const Polygon&, int, int, Polygon&, Polygon&);
-// Decompose a concave polygon into multiple convex polygons.
-// Params: polygon to consider, list to store the result
-void decompose(const Polygon&, std::list<Polygon>&);
-// Merge two polygons by their shared edge given the edges index in each polygon and return the result.
-// Params: polygons to consider, indexes of shared edge
-Polygon merge(const Polygon&, const Polygon&, unsigned int, unsigned int);
-// Combine applicable subregions after decomposition.
-// Params: list of polygon subregions
-void mergeSubregions(std::list<Polygon>&);
-// Helper function to cross two Coordinates treated as vectors.
-inline float_type cross(const Coord&, const Coord&);
+//inline float_type deltaDistance(const Polygon &p, int i, int j);
+/**
+ * @brief Find the width of a convex polygon.
+ * @param p the polygon
+ * @return the width of the polygon as a span
+ * @see Span Polygon
+ */
+Span getWidth(const Polygon &p);
+/**
+ * @brief Determine if a given vertex of a polygon is concave.
+ * @param p the polygon
+ * @param i index of the vertex
+ * @return true if the vertex is concave, else false
+ * @see Polygon
+ */
+bool isConcave(const Polygon &p, int i);
+/**
+ * @brief Splits a polygon into two along an edge.
+ * @param p the polygon
+ * @param v1 first vertex of edge
+ * @param v2 second vertex of edge
+ * @param p1 stores the first resulting polygon
+ * @param p2 stores the second resulting polygon
+ * @return resulting polygons are stored in p1 and p2
+ * @see Polygon
+ */
+void split(const Polygon &p, int v1, int v2, Polygon &p1, Polygon &p2);
+/**
+ * @brief Decompose a concave polygon into multiple convex polygons.
+ * @param p the polygon
+ * @param l stores the resulting list of polygons
+ * @result resulting polygons are stored in l
+ * @see Polygon
+ */
+void decompose(const Polygon &p, std::list<Polygon> &l);
+/**
+ * @brief Merge two polygons by their shared edge given the edge's index in each polygon and return the result
+ * @param p1 the first polygon
+ * @param p2 the second polygon
+ * @param i index of the shared edge in p1
+ * @param j index of the shared edge in p2
+ * @return the merged polygon
+ * @see Polygon
+ */
+Polygon merge(const Polygon &p1, const Polygon &p2, unsigned int i, unsigned int j);
+/**
+ * @brief Combine applicable subregions after decomposition.
+ * @param l list of decomposed polygon subregions
+ * @see Polygon decompose
+ */
+void mergeSubregions(std::list<Polygon> &l);
+/**
+ * @brief Calculate the cross product of two vectors represented as coordinates.
+ * @param c1 the first vector as a coordinate
+ * @param c2 the second vector as a coordinate
+ * @return the cross product
+ * @see Coord float_type
+ */
+inline float_type cross(const Coord &c1, const Coord &c2);
 // Find the intersection of two line segments (represented as Edges) and return the intersection or NULL if it does not exist.
 // Params: edges to consider, reference to store the intersection coordinate
-bool intersection(const Edge&, const Edge&, Coord&);
-// Traverse a convex polygon and store the waypoints in a list as Edges.
-// Params: polygon to consider, list to store the result
-void traverse(const Polygon&, std::list<Edge>&);
-// Helper function to compute the adjacencies and weights of the graph.
-void computeGraph(Graph<Node, float_type>&);
-// Helper to compute the total length of a graph traversal.
-float_type traversalLength(const Graph<Node, float_type>&, std::list<unsigned int>&);
-// Compute the minimum cost traversal for the weighted graph.
-std::list<unsigned int> minTraversal(Graph<Node, float_type>&);
-// Determine the start states of each node along the minimum traversal.
-void computeStates(std::list<unsigned int>&, Graph<Node, float_type>&);
-// Generates the search path for polygon p and returns it as a list of coords.
-std::list<Coord> searchPath(const Polygon&);
-// Returns true if coordinates are in clockwise order, else false. Assumes +y axis points upwards.
-bool clockwise(const std::vector<Coord>&);
-// Returns a path from point1 to point2 that does not intersect the boundary polygon
-std::list<Coord> pathTo(const Coord&, const Coord&, const Polygon&);
-// Traverse the polygon using a simple East-West traversal
-// Params: polygon to consider, list to store the result
-void naiveTraverse(const Polygon&, std::list<Edge>&);
-// Generates a search path using naive traversal
-std::list<Coord> naivePath(const Polygon&);
+/**
+ * @brief Find the intersection of two line segments.
+ * @param e1 the first line segment as an edge
+ * @param e2 the second line segment as an edge
+ * @param intersect stores the intersection if one exists
+ * @return returns true and stores result in intersect if intersection exists, else returns false
+ * @see Coord Edge
+ */
+bool intersection(const Edge &e1, const Edge &e2, Coord &intersect);
+/**
+ * @brief Traverse a convex polygon and store the waypoints in a list as Edges.
+ * @param p the polygon to traverse
+ * @param waypoints list to store the traversal
+ * @see Polygon Edge
+ */
+void traverse(const Polygon &p, std::list<Edge> &waypoints);
+/**
+ * @brief Helper function to compute the adjacencies and weights of the graph.
+ * @param g the graph to compute
+ * @see Graph
+ */
+void computeGraph(Graph<Node, float_type> &g);
+/**
+ * @brief Compute the total length of a graph traversal.
+ * @param g the weighted graph
+ * @param path the traversal path
+ * @return the total length of the traversal
+ * @see Graph float_type
+ */
+float_type traversalLength(const Graph<Node, float_type> &g, std::list<unsigned int> &path);
+/**
+ * @brief Compute the minimum cost traversal for the weighted graph.
+ * @param g the weighted graph
+ * @return the minimum cost traversal as a list of node indeces
+ * @see Graph
+ */
+std::list<unsigned int> minTraversal(Graph<Node, float_type> &g);
+/**
+ * @brief Determine the start states of each node along the traversal.
+ * @param path the traversal
+ * @param g the weighted graph
+ * @see State
+ */
+void computeStates(std::list<unsigned int> &path, Graph<Node, float_type> &g);
+/**
+ * @brief Generates the search path for a polygon.
+ * @param p the polygon
+ * @return the search path as a list of Coords
+ * @see Coord
+ */
+std::list<Coord> searchPath(const Polygon &p);
+/**
+ * @brief Determine if the list of coordinates are in clockwise order.
+ * @param v the list of coordinates
+ * @return true if coordinates are clockwise, else false
+ * @see Coord
+ */
+bool clockwise(const std::vector<Coord> &v);
+/**
+ * @brief Computes a path from one point to another that does not intersect the boundary polygon.
+ * Assumes both points are inside the boundary polygon
+ * @param point1 the first point
+ * @param point2 the second point
+ * @param boundary the boundary polygon
+ * @return the path as a list of Coords
+ * @see Coord Polygon
+ */
+std::list<Coord> pathTo(const Coord &point1, const Coord &point2, const Polygon &boundary);
+/**
+ * @brief Traverse the polygon using a simple East-West traversal.
+ * @param p the polygon
+ * @param waypoints stores the resulting waypoints of the traversal
+ * @return resulting traversal is stored in waypoints
+ * @see Polygon Edge
+ */
+void naiveTraverse(const Polygon &p, std::list<Edge> &waypoints);
+/**
+ * @brief Generates a search path for a polygon using naive traversal.
+ * @param p the polygon
+ * @return the search path as a list of Coords
+ * @see Coord Polygon naiveTraverse
+ */
+std::list<Coord> naivePath(const Polygon &p);
 
 //============================================================
 // Structs
 //============================================================
-struct Coord // Simple struct representing a coordinate
+/**
+ * @brief Simple representation of a 2D coordinate.
+ */
+struct Coord
 {
+    /**
+     * @brief The X and Y values of the coordinate.
+     */
     float_type x, y;
-    
+
+    /**
+     * @brief Create a new Coord.
+     */
     Coord(float_type xCoord = 0, float_type yCoord = 0)
     {
         x = xCoord;
         y = yCoord;
     }
-    std::string str() const // For debugging. Can be removed in the final implementation
+    /**
+     * @brief Format the coordinate as a string.
+     * @return a string representation of the Coord
+     */
+    std::string str() const
     {
         std::ostringstream s;
         s << "(" << x << "," << y << ")";
         return s.str();
     }
+    /**
+     * @brief Overloaded == operator
+     */
     bool operator==(const Coord &op) const
     { return ((x == op.x) && (y == op.y)); }
+    /**
+     * @brief Overloaded != operator
+     */
     bool operator !=(const Coord &op) const
     { return !((*this) == op); }
     // Some arithmetic operators to aid in vector arithmetic
+    /**
+     * @brief Overloaded + operator
+     */
     Coord operator+(const Coord &op) const
     { return Coord(x + op.x, y + op.y); }
+    /**
+     * @brief Overloaded - operator
+     */
     Coord operator-(const Coord &op) const
     { return Coord(x - op.x, y - op.y); }
-    float_type operator*(const Coord &op) const // Dot product
+    /**
+     * @brief Computes the dot product of two vectors.
+     */
+    float_type operator*(const Coord &op) const
     { return x * op.x + y * op.y; }
-    Coord operator*(float_type mult) const // Scalar multiplication
+    /**
+     * @brief Scalar multiplication.
+     */
+    Coord operator*(float_type mult) const
     { return Coord(mult * x, mult * y); }
-    float_type vectorLength() const // Return length of vector from origin to the coordinate
+    /**
+     * @brief Return length of vector from origin to the coordinate.
+     */
+    float_type vectorLength() const
     { return sqrt((x * x) + (y * y)); }
 };
 
-struct Edge // Edge composed of two coordinates
+/**
+ * @brief Simple representation of an edge.
+ */
+struct Edge
 {
+    /**
+     * @brief The vertices of the edge.
+     * @see Coord
+     */
     Coord v1, v2;
-    float_type a, b, c; // Coeffs for the standard form of the line (ax + by + c).
-    
+    /**
+     * @brief Coefficients for the standard form of the line (ax + by + c).
+     */
+    float_type a, b, c;
+
+    /**
+     * @brief Default constructor.
+     */
     Edge()
     {
         v1 = v2 = Coord();
         a = b = c = 0;
     }
+    /**
+     * @brief Construct an Edge given two Coords
+     * @see Coord
+     */
     Edge(Coord vert1, Coord vert2)
     {
         v1 = vert1;
@@ -147,13 +321,32 @@ struct Edge // Edge composed of two coordinates
         b = 1;
         c = (m * vert1.x) - vert1.y;
     }
+    /**
+     * @brief Get the slope of the edge.
+     * @return the slope of the edge
+     * @see float_type
+     */
     float_type slope() const
     { return -a; }
+    /**
+     * @brief Determine if the edge is vertical.
+     * @return true if the edge is vertical, else false
+     */
     bool isVertical() const
     { return v1.x == v2.x; }
+    /**
+     * @brief Get the length of the edge
+     * @return the length of the edge
+     * @see float_type
+     */
     float_type length() const
     { return distance(v1, v2); }
-    float_type theta() const // Returns the edge's angle from the horizontal in radians
+    /**
+     * @brief Get the angle of the edge from the horizontal in radians
+     * @return the angle of the edge in radians
+     * @see float_type
+     */
+    float_type theta() const
     {
         if (isVertical())
         {
@@ -172,39 +365,97 @@ struct Edge // Edge composed of two coordinates
         else
             return atan2(v2.y - v1.y, v2.x - v1.x);
     }
+    /**
+     * @brief Overloaded == operator
+     */
     bool operator==(const Edge &op) const
     { return ((v1 == op.v1) && (v2 == op.v2)) || ((v1 == op.v2) && (v2 == op.v1)); }
 };
 
-struct Span // Representation of a span in Vertex-Edge form
+/**
+ * @brief Representation of a span in Vertex-Edge form.
+ */
+struct Span
 {
-    Coord v; // The antipodal vertex of this span
-    Edge e; // The edge component of the span
-    
+    /**
+     * @brief The antipodal vertex of the span.
+     */
+    Coord v;
+    /**
+     * @brief The edge component of the span.
+     */
+    Edge e;
+
+    /**
+     * @brief Constructor
+     */
     Span(Coord vert, Edge edge)
     {
         v = vert;
         e = edge;
     }
+    /**
+     * @brief Get the length of the span.
+     * @return the length of the span
+     * @see float_type
+     */
     float_type length() const
     { return distance(v, e); }
+    /**
+     * @brief Get the angle of the span from the horizontal.
+     * @return the angle of the span in radians
+     * @see float_type
+     */
     float_type theta() const // Assumes e.theta() returns a value in the range [-PI, PI]
     { return e.theta() + (PI / 2.0); }
+    /**
+     * @brief Add up the lengths of two spans
+     * @return the sum of lengths
+     */
     float_type operator+(const Span &op) const
     { return length() + op.length(); }
 };
 
-struct Polygon // A list of vertices stored in CCW order. The polygon is assumed to be simple with no holes.
+/**
+ * @brief Represents a polygon as a list of vertices in CCW order.
+ */
+struct Polygon
 {
     // Using std::vector to store the list of vertices for efficient random access. This can be replaced with a more memory efficient container later if necessary
-    std::vector<Coord> v; // The vertices of the polygon in counter-clockwise order
-    
+    /**
+     * @brief The vertices of the polygon in CCW order
+     * @see Coord
+     */
+    std::vector<Coord> v;
+
+    /**
+     * @brief Add a vertex to the polygon
+     * @param vert the vertex to add
+     * @see Coord
+     */
     void addVert(Coord vert)
     { v.push_back(vert); }
+    /**
+     * @brief Get the number of vertices in the polygon.
+     * @return the number of vertices
+     */
     unsigned int size() const
     { return v.size(); }
+    /**
+     * @brief Construct an edge of the polygon given the index of the first vertex.
+     * @param i index of the first vertex
+     * @return the corresponding edge
+     * @see Edge
+     */
     Edge edge(unsigned int i) const // Constructs and returns a specific edge of the polygon indexed by the index of the first vertex
     { return Edge(v.at(i), v.at((i + 1) % v.size())); }
+    /**
+     * @brief Determine if the polygon is adjacent.
+     * @param p the polygon
+     * @param edgeIndex1 if not null, stores the index of the shared edge for this polygon
+     * @param edgeIndex2 if not null, stores the index of the shared edge for p
+     * @return true if adjacent and stores indeces in edgeIndex1 and edgeIndex2 if not null, else false and stores -1 in edgeIndex1 and edgeIndex2 if not null
+     */
     bool adjacent(Polygon &p, int *edgeIndex1 = NULL, int *edgeIndex2 = NULL) const // Return true if p is adjacent and store the indeces for the edge in edgeIndex1 and 2 respectively. Else, return false and set indices to -1.
     { // This is the O(nm) solution which should be good enough unless our polygons are crazy. If more speed is required, use a hashing solution for linear time complexity.
         for (unsigned int i = 0; i < v.size(); ++i)
@@ -229,6 +480,11 @@ struct Polygon // A list of vertices stored in CCW order. The polygon is assumed
             *edgeIndex2 = -1;
         return false;
     }
+    /**
+     * @brief Get the center of the polygon.
+     * @return the approximate center of the polygon as a Coord
+     * @see Coord
+     */
     Coord center() const // Return the center of the bounding box for the polygon
     {
         float_type xMin, xMax;
@@ -248,6 +504,10 @@ struct Polygon // A list of vertices stored in CCW order. The polygon is assumed
         }
         return Coord(((xMin + xMax) / 2), ((yMin + yMax) / 2));
     }
+    /**
+     * @brief Get the string representation of the polygon.
+     * @return the string representation of the polygon
+     */
     std::string str() const
     {
         std::ostringstream result;
@@ -255,6 +515,9 @@ struct Polygon // A list of vertices stored in CCW order. The polygon is assumed
             result << v[i].str() << '\n';
         return result.str();
     }
+    /**
+     * @brief Overloaded assignment operator
+     */
     Polygon& operator=(const Polygon &op)
     {
         v = op.v;
@@ -262,12 +525,31 @@ struct Polygon // A list of vertices stored in CCW order. The polygon is assumed
     }
 };
 
-struct Node // This consists of the search path for the polygon, a pointer to the polygon, and the start state
+/**
+ * @brief Node class for weighted graph.
+ * Consists of the search path for the polygon, a pointer to the polygon, and the start state
+ */
+struct Node
 {
-    Polygon *p; // Pointer to the polygon the node is associated with
-    std::list<Edge> path; // The traversal path for this polygon
+    /**
+     * @brief A pointer to the associated polygon
+     * @see Polygon
+     */
+    Polygon *p;
+    /**
+     * @brief The traversal path for the associated polygon
+     * @see Edge
+     */
+    std::list<Edge> path;
+    /**
+     * @brief The start state of the traversal
+     * @see State
+     */
     State startState;
 
+    /**
+     * @brief Constructor
+     */
     Node(Polygon *poly = NULL, std::list<Edge> *waypoints = NULL, State state = START_V1)
     {
         p = poly;
@@ -292,8 +574,8 @@ float_type distance(const Coord &v, const Edge &e) // Find the distance between 
     return numer / denom;
 }
 
-inline float_type deltaDistance(const Polygon &p, int i, int j) // Helper calculation for finding antipodal vertices
-{ return (p.v[(i + 1) % p.size()].y - p.v[i].y) * (p.v[(j + 1) % p.size()].x - p.v[j].x) - (p.v[(i + 1) % p.size()].x - p.v[i].x) * (p.v[(j + 1) % p.size()].y - p.v[j].y); }
+// inline float_type deltaDistance(const Polygon &p, int i, int j) // Helper calculation for finding antipodal vertices
+// { return (p.v[(i + 1) % p.size()].y - p.v[i].y) * (p.v[(j + 1) % p.size()].x - p.v[j].x) - (p.v[(i + 1) % p.size()].x - p.v[i].x) * (p.v[(j + 1) % p.size()].y - p.v[j].y); }
 
 // Span getWidth(const Polygon &p) // Find the width of a convex polygon in O(n)
 // { // This is bugged and incorrect. Because the polygons are likely to not have a large amount of edges, we'll go with the simple O(n^2) solution for safety

@@ -1,3 +1,8 @@
+/**
+ * @file Conversions.cpp
+ * @brief Provides functions for converting GPS coordinates to and from 2D coordinates.
+ * @author Harvey Lin
+ */
 #pragma once
 #include "Polygon.cpp"
 #include <vector>
@@ -7,24 +12,96 @@
 // Prototypes, Constants, and Global Variables for
 // GPS to Cartesian conversion
 //================================================================
-void init(float_type, float_type); // Initialize global variables
-std::vector<float_type> GPStoCartesian(const float_type, const float_type); // Converts GPS longitude and latitude to Cartesian coordinates with standard basis vectors and origin at the center of the Earth.
-Coord GPStoCoord(const float_type, const float_type); // Converts GPS longitude and latitude to Cartesian coordinates measured in meters.
-void CoordtoGPS(const Coord&, float_type&, float_type&); // Converts a coordinate in our Cartesian system to GPS longitude and latitude
+/**
+ * @brief Initialize global reference vectors used for basis vector conversion from an anchor coordinate.
+ * Call this before anything else.
+ * @param longitude the longitude of the anchor coordinate in radians
+ * @param latitude the latitude of the anchor coordinate in radians
+ */
+void init(float_type longitude, float_type latitude);
+/**
+ * @brief Converts GPS longitude and latitude to 3D Cartesian coordinates with standard basis vectors.
+ * Origin is at the center of the Earth
+ * @param longitude the longitude of the coordinate in radians
+ * @param latitude the latitude of the coordinate in radians
+ */
+std::vector<float_type> GPStoCartesian(const float_type longitude, const float_type latitude);
+/**
+ * @brief Converts GPS longitude and latitude to 2D Cartesian coordinates measured in meters.
+ * @param longitude the longitude of the coordinate in radians
+ * @param latitude the latitude of the coordinate in radians
+ * @return equivalent 2D coordinate
+ * @see Coord
+ */
+Coord GPStoCoord(const float_type longitude, const float_type latitude); // Converts GPS longitude and latitude to Cartesian coordinates measured in meters.
+/**
+ * @brief Converts a 2D coordinate back to GPS longitude and latitude.
+ * @param c coordinate to convert
+ * @param longitude stores the resulting longitude
+ * @param latitude stores the resulting latitude
+ * @return resulting longitude is stored in longitude, latitude is stored in latitude
+ */
+void CoordtoGPS(const Coord &c, float_type &longitude, float_type &latitude); // Converts a coordinate in our Cartesian system to GPS longitude and latitude
+/**
+ * @brief Compute the basis vectors for our Cartesian system. Make sure this is run after init at the start of main.
+ * @see init
+ */
 inline void computeBasis(); // Compute the basis vectors for our Cartesian system. Make sure this is run at the start of main.
-inline float_type toRadians(float_type); // Convert degrees to radians
-inline float_type toDegrees(float_type); // Convert radians to degrees
-inline float_type toMeters(float_type); // Convert feet to meters
-inline float_type toFeet(float_type); // Convert meters to feet
+/**
+ * @brief Convert degrees to radians.
+ * @param degrees degrees to convert
+ * @return equivalent in radians
+ * @see float_type
+ */
+inline float_type toRadians(float_type degrees); // Convert degrees to radians
+/**
+ * @brief Convert radians to degrees.
+ * @param radians radians to convert
+ * @return requivalent in degrees
+ * @see float_type
+ */
+inline float_type toDegrees(float_type radians); // Convert radians to degrees
+/**
+ * @brief Convert feet to meters.
+ * @param feet feet to convert
+ * @return equivalent in meters
+ * @see float_type
+ */
+inline float_type toMeters(float_type feet); // Convert feet to meters
+/**
+ * @brief Convert meters to feet.
+ * @param meters meters to convert
+ * @return equivalent in feet
+ * @see float_type
+ */
+inline float_type toFeet(float_type meters); // Convert meters to feet
 
+/**
+ * @brief Indeces used to store X, Y, and Z coordinates in a vector.
+ */
 enum {X = 0, Y = 1, Z = 2};
 namespace global // Global constants used to keep function calls simple
 {
-    std::vector<float_type> refCart; // GPS reference point in standard basis Cartesian coordinates
-    std::vector<float_type> ourX, ourY, ourZ; // Basis vectors for our cartesian system
-    float_type convMatrix[3][3] = {}; // Conversion matrix from standard basis to our basis
-    float_type REF_LONG = 0; // Longitude of GPS coordinate used as the origin of our Cartesian system in radians
-    float_type REF_LAT = 0; // Latitude of GPS coordinate used as the origin of our Cartesian system in radians
+    /**
+     * @brief GPS reference point in standard basis 3D Cartesian coordinates.
+     */
+    std::vector<float_type> refCart;
+    /**
+     * @brief Basis vectors for our cartesian system.
+     */
+    std::vector<float_type> ourX, ourY, ourZ;
+    /**
+     * @brief Conversion matrix from standard basis to our basis.
+     */
+    float_type convMatrix[3][3] = {};
+    /**
+     * @brief Longitude of GPS coordinate used as the origin of our Cartesian system in radians.
+     */
+    float_type REF_LONG = 0;
+    /**
+     * @brief Latitude of GPS coordinate used as the origin of our Cartesian system in radians.
+     */
+    float_type REF_LAT = 0;
 }
 
 //================================================================

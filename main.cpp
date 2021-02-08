@@ -1,8 +1,11 @@
-// ---
-// Main driver for search path generation
-// Pass the optional argument "naive" to use naive path generation with no decomposition
-// Pass either no argument or "decomp" to use path generation with convex polygon decomposition
-// ---
+/**
+ * @file main.cpp
+ * @brief Main driver for search path generation.
+ * Pass the optional argument "naive" to use naive path generation with no decomposition.
+ * Pass either no argument or "decomp" to use path generation with convex polygon decomposition.
+ * @author Harvey Lin
+ */
+
 #include "Polygon.cpp"
 #include "Conversions.cpp"
 #include <cctype>
