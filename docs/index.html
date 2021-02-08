@@ -118,16 +118,16 @@ To change the offset spacing between each parallel sweep of a traversal (in METE
 <li>
 To change the distance waypoints are scaled inward to avoid exiting the boundary, change the #define statement for <b>CORRECTION</b> </li>
 <li>
-In the case that lines from mission files overflow the character buffer used in <a class="el" href="main_8cpp.html" title="Main driver for search path generation. Pass the optional argument &quot;naive&quot; to use naive path generati...">main.cpp</a>, change the value of the #define statement for <b>BUFF_MAX</b> </li>
+In the case that lines from mission files overflow the character buffer used in <a class="el" href="main_8cpp.html" title="Main driver for search path generation. Pass the optional argument &quot;naive&quot; to use naive path generati...">main.cpp</a>, increase the value of the #define statement for <b>BUFF_MAX</b> </li>
 </ul>
 <h2 id="debug">Notes for Debugging</h2>
 <ul>
 <li>
 <a class="el" href="main_8cpp.html" title="Main driver for search path generation. Pass the optional argument &quot;naive&quot; to use naive path generati...">main.cpp</a> is the main driver and handles file I/O and calls the necessary functions for search path generation </li>
 <li>
-<a class="el" href="_conversions_8cpp.html" title="Provides functions for converting GPS coordinates to and from 2D coordinates.">Conversions.cpp</a> contains functions for handling conversions from GPS lat long coordinates to 2-D Cartesian coordinates and vis versa </li>
+<a class="el" href="_conversions_8cpp.html" title="Provides functions for converting GPS coordinates to and from 2D coordinates. Converts coordinates to...">Conversions.cpp</a> contains functions for handling conversions from GPS lat long coordinates to 2-D Cartesian coordinates and vis versa </li>
 <li>
-<a class="el" href="_polygon_8cpp.html" title="Polygon decomposition and traversal algorithm structs and functions. All units are in meters.">Polygon.cpp</a> contains structs and functions for implementing polygon decomposition and search path generation. The most relevant functions for client code are <a class="el" href="_polygon_8cpp.html#a79821244b87f1fef961a2665b18181f9" title="Generates the search path for a polygon.">searchPath()</a>, <a class="el" href="_polygon_8cpp.html#acee1ad2cddb1a77491abcba8e02f9738" title="Generates a search path for a polygon using naive traversal.">naivePath()</a>, and <a class="el" href="_polygon_8cpp.html#ae99c7dae2d2fc09893b14b600b930107" title="Computes a path from one point to another that does not intersect the boundary polygon....">pathTo()</a> </li>
+<a class="el" href="_polygon_8cpp.html" title="Polygon decomposition and traversal algorithm structs and functions. Implements the greedy recursive ...">Polygon.cpp</a> contains structs and functions for implementing polygon decomposition and search path generation. The most relevant functions for client code are <a class="el" href="_polygon_8cpp.html#a79821244b87f1fef961a2665b18181f9" title="Generates the search path for a polygon.">searchPath()</a>, <a class="el" href="_polygon_8cpp.html#acee1ad2cddb1a77491abcba8e02f9738" title="Generates a search path for a polygon using naive traversal.">naivePath()</a>, and <a class="el" href="_polygon_8cpp.html#ae99c7dae2d2fc09893b14b600b930107" title="Computes a path from one point to another that does not intersect the boundary polygon....">pathTo()</a> </li>
 </ul>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->

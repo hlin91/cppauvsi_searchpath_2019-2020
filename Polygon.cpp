@@ -1,6 +1,8 @@
 /**
  * @file Polygon.cpp
  * @brief Polygon decomposition and traversal algorithm structs and functions.
+ * Implements the greedy recursive approach using minimum width sum
+ * outlined in a paper by Yan Li et al.
  * All units are in meters.
  * @author Harvey Lin
  */

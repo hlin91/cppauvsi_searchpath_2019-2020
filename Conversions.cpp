@@ -1,6 +1,8 @@
 /**
  * @file Conversions.cpp
  * @brief Provides functions for converting GPS coordinates to and from 2D coordinates.
+ * Converts coordinates to 2D points on the plane tangent to the Earth approximated as a sphere
+ * at the anchor coordinate.
  * @author Harvey Lin
  */
 #pragma once
