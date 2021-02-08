@@ -5,12 +5,17 @@
 <h2>Table of Contents</h2>
 <p>
   <ol>
+    <li><a href="#docs">Documentation</a></li>
     <li><a href="#dependencies">Dependencies</a></li>
     <li><a href="#compilation">Compilation Notes</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#config">Configuration</a></li>
     <li><a href="#debug">Notes for Debugging</a></li>
   </ol>
+</p>
+<h2 id="docs">Documentation</h2>
+<p>
+  For detailed documentation, click <a href="hlin91.github.io/cppauvsi_searchpath_2019-2020/">here</a>.
 </p>
 <h2 id="dependencies">Dependencies</h2>
 <p>
