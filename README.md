@@ -15,7 +15,7 @@
 </p>
 <h2 id="docs">Documentation</h2>
 <p>
-  For detailed documentation, click <a href="hlin91.github.io/cppauvsi_searchpath_2019-2020/">here</a>.
+  For detailed documentation, click <a href="https://hlin91.github.io/cppauvsi_searchpath_2019-2020/">here</a>.
 </p>
 <h2 id="dependencies">Dependencies</h2>
 <p>
