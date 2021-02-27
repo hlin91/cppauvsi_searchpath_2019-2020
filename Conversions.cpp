@@ -168,11 +168,9 @@ void computeBasis() // Compute our basis vectors based on the given reference po
     global::ourZ = global::refCart;
     float_type length = sqrt(global::ourZ[X] * global::ourZ[X] + global::ourZ[Y] * global::ourZ[Y] + global::ourZ[Z] * global::ourZ[Z]);
     // Compute our X basis vector using equation of the plane at reference point
-    // We are going to ensure that the X basis vector is parallel to East-West
-    // Set the X value to 0 and keep the Z value the same as the reference point
-    global::ourX = global::refCart;
-    global::ourX[X] = 0;
-    global::ourX[Y] = ((global::ourZ[X] * global::refCart[X]) - (global::ourZ[X] * global::ourX[X]) + (global::ourZ[Y] * global::refCart[Y]) + (global::ourZ[Z] * global::refCart[Z]) - (global::ourZ[Z] * global::ourX[Z])) / global::ourZ[Y];
+    global::ourX.push_back(1.0);
+    global::ourX.push_back(0);
+    global::ourX.push_back((global::ourZ[X] * global::refCart[X] - global::ourZ[X] * global::ourX[X] + global::ourZ[Y] * global::refCart[Y] - global::ourZ[Y] * global::ourX[Y] + global::ourZ[Z] * global::refCart[Z]) / global::ourZ[Z]);
     // Make our X the positional vector anchored at global::refCart and pointing towards the point we just calculated on the plane
     global::ourX[X] -= global::refCart[X];
     global::ourX[Y] -= global::refCart[Y];

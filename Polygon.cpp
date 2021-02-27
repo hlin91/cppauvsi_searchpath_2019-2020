@@ -198,7 +198,7 @@ bool clockwise(const std::vector<Coord> &v);
  */
 std::list<Coord> pathTo(const Coord &point1, const Coord &point2, const Polygon &boundary);
 /**
- * @brief Traverse the polygon using a simple East-West traversal.
+ * @brief Traverse the polygon using a simple parallel traversal.
  * @param p the polygon
  * @param waypoints stores the resulting waypoints of the traversal
  * @return resulting traversal is stored in waypoints
