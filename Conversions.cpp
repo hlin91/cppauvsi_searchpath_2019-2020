@@ -91,7 +91,7 @@ namespace global // Global constants used to keep function calls simple
     /**
      * @brief Basis vectors for our cartesian system.
      */
-    std::vector<float_type> ourX, ourY, ourZ;
+    std::vector<float_type> ourX(3), ourY(3), ourZ(3);
     /**
      * @brief Conversion matrix from standard basis to our basis.
      */
@@ -168,17 +168,17 @@ void computeBasis() // Compute our basis vectors based on the given reference po
     global::ourZ = global::refCart;
     float_type length = sqrt(global::ourZ[X] * global::ourZ[X] + global::ourZ[Y] * global::ourZ[Y] + global::ourZ[Z] * global::ourZ[Z]);
     // Compute our X basis vector using equation of the plane at reference point
-    global::ourX.push_back(1.0);
-    global::ourX.push_back(0);
-    global::ourX.push_back((global::ourZ[X] * global::refCart[X] - global::ourZ[X] * global::ourX[X] + global::ourZ[Y] * global::refCart[Y] - global::ourZ[Y] * global::ourX[Y] + global::ourZ[Z] * global::refCart[Z]) / global::ourZ[Z]);
+    global::ourX[X] = (1.0);
+    global::ourX[Y] = (0);
+    global::ourX[Z] = ((global::ourZ[X] * global::refCart[X] - global::ourZ[X] * global::ourX[X] + global::ourZ[Y] * global::refCart[Y] - global::ourZ[Y] * global::ourX[Y] + global::ourZ[Z] * global::refCart[Z]) / global::ourZ[Z]);
     // Make our X the positional vector anchored at global::refCart and pointing towards the point we just calculated on the plane
     global::ourX[X] -= global::refCart[X];
     global::ourX[Y] -= global::refCart[Y];
     global::ourX[Z] -= global::refCart[Z];
     // Cross our X and our Z to get our Y
-    global::ourY.push_back(global::ourZ[Y] * global::ourX[Z] - global::ourZ[Z] * global::ourX[Y]);
-    global::ourY.push_back(-(global::ourZ[X] * global::ourX[Z] - global::ourZ[Z] * global::ourX[X]));
-    global::ourY.push_back(global::ourZ[X] * global::ourX[Y] - global::ourZ[Y] * global::ourX[X]);
+    global::ourY[X] = (global::ourZ[Y] * global::ourX[Z] - global::ourZ[Z] * global::ourX[Y]);
+    global::ourY[Y] = (-(global::ourZ[X] * global::ourX[Z] - global::ourZ[Z] * global::ourX[X]));
+    global::ourY[Z] = (global::ourZ[X] * global::ourX[Y] - global::ourZ[Y] * global::ourX[X]);
     // Scale basis vectors to unit length
     for (unsigned int i = 0; i < global::ourZ.size(); ++i)
 	global::ourZ[i] /= length;
