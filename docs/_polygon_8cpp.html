@@ -185,7 +185,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:ae99c7dae2d2fc09893b14b600b930107"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes a path from one point to another that does not intersect the boundary polygon. Assumes both points are inside the boundary polygon.  <a href="_polygon_8cpp.html#ae99c7dae2d2fc09893b14b600b930107">More...</a><br /></td></tr>
 <tr class="separator:ae99c7dae2d2fc09893b14b600b930107"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed5889b818cf687a090fd7ea612e3ca9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_polygon_8cpp.html#aed5889b818cf687a090fd7ea612e3ca9">naiveTraverse</a> (const <a class="el" href="struct_polygon.html">Polygon</a> &amp;p, std::list&lt; <a class="el" href="struct_edge.html">Edge</a> &gt; &amp;waypoints)</td></tr>
-<tr class="memdesc:aed5889b818cf687a090fd7ea612e3ca9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Traverse the polygon using a simple East-West traversal.  <a href="_polygon_8cpp.html#aed5889b818cf687a090fd7ea612e3ca9">More...</a><br /></td></tr>
+<tr class="memdesc:aed5889b818cf687a090fd7ea612e3ca9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Traverse the polygon using a simple parallel traversal.  <a href="_polygon_8cpp.html#aed5889b818cf687a090fd7ea612e3ca9">More...</a><br /></td></tr>
 <tr class="separator:aed5889b818cf687a090fd7ea612e3ca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acee1ad2cddb1a77491abcba8e02f9738"><td class="memItemLeft" align="right" valign="top">std::list&lt; <a class="el" href="struct_coord.html">Coord</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_polygon_8cpp.html#acee1ad2cddb1a77491abcba8e02f9738">naivePath</a> (const <a class="el" href="struct_polygon.html">Polygon</a> &amp;p)</td></tr>
 <tr class="memdesc:acee1ad2cddb1a77491abcba8e02f9738"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a search path for a polygon using naive traversal.  <a href="_polygon_8cpp.html#acee1ad2cddb1a77491abcba8e02f9738">More...</a><br /></td></tr>
@@ -718,7 +718,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>pathToHelp</b> (std::
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>the search path as a list of Coords </dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="struct_coord.html" title="Simple representation of a 2D coordinate.">Coord</a> <a class="el" href="struct_polygon.html" title="Represents a polygon as a list of vertices in CCW order.">Polygon</a> <a class="el" href="_polygon_8cpp.html#aed5889b818cf687a090fd7ea612e3ca9" title="Traverse the polygon using a simple East-West traversal.">naiveTraverse</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="struct_coord.html" title="Simple representation of a 2D coordinate.">Coord</a> <a class="el" href="struct_polygon.html" title="Represents a polygon as a list of vertices in CCW order.">Polygon</a> <a class="el" href="_polygon_8cpp.html#aed5889b818cf687a090fd7ea612e3ca9" title="Traverse the polygon using a simple parallel traversal.">naiveTraverse</a> </dd></dl>
 
 </div>
 </div>
@@ -748,7 +748,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>pathToHelp</b> (std::
       </table>
 </div><div class="memdoc">
 
-<p>Traverse the polygon using a simple East-West traversal. </p>
+<p>Traverse the polygon using a simple parallel traversal. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">p</td><td>the polygon </td></tr>
