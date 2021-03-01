@@ -82,7 +82,7 @@ inline float_type toFeet(float_type meters); // Convert meters to feet
  * @brief Indeces used to store X, Y, and Z coordinates in a vector.
  */
 enum {X = 0, Y = 1, Z = 2};
-namespace global // Global constants used to keep function calls simple
+namespace conv // Global constants used to keep function calls simple
 {
     /**
      * @brief GPS reference point in standard basis 3D Cartesian coordinates.
@@ -111,9 +111,9 @@ namespace global // Global constants used to keep function calls simple
 //================================================================
 void init(float_type longitude, float_type latitude)
 {
-    global::REF_LONG = longitude;
-    global::REF_LAT = latitude;
-    global::refCart = GPStoCartesian(global::REF_LONG, global::REF_LAT);
+    conv::REF_LONG = longitude;
+    conv::REF_LAT = latitude;
+    conv::refCart = GPStoCartesian(conv::REF_LONG, conv::REF_LAT);
 }
 
 std::vector<float_type> GPStoCartesian(const float_type longitude, const float_type latitude) // Converts GPS to 3D Cartesian coordinates with standard basis vectors
@@ -135,29 +135,29 @@ Coord GPStoCoord(const float_type longitude, const float_type latitude) // Conve
     result.x = result.y = 0;
     // Shift so that our reference coordinate is the origin
     // std::cout << "GPS Cartesian (before shift): " << standardCart[X] << ", " << standardCart[Y] << ", " << standardCart[Z] << '\n';
-    standardCart[X] -= global::refCart[X];
-    standardCart[Y] -= global::refCart[Y];
-    standardCart[Z] -= global::refCart[Z];
+    standardCart[X] -= conv::refCart[X];
+    standardCart[Y] -= conv::refCart[Y];
+    standardCart[Z] -= conv::refCart[Z];
     // Convert to our basis vectors
     // Because of how we defined our basis vectors, we should be able to disregard the resulting Z-coordinate since it will be approximately 0
-    result.x = global::convMatrix[0][0] * standardCart[X] + global::convMatrix[0][1] * standardCart[Y] + global::convMatrix[0][2] * standardCart[Z];
-    result.y = global::convMatrix[1][0] * standardCart[X] + global::convMatrix[1][1] * standardCart[Y] + global::convMatrix[1][2] * standardCart[Z];
+    result.x = conv::convMatrix[0][0] * standardCart[X] + conv::convMatrix[0][1] * standardCart[Y] + conv::convMatrix[0][2] * standardCart[Z];
+    result.y = conv::convMatrix[1][0] * standardCart[X] + conv::convMatrix[1][1] * standardCart[Y] + conv::convMatrix[1][2] * standardCart[Z];
     // std::cout statement for debugging
     // std::cout << "After conversion: " << result.x << ", " << result.y << ", "
-    //   	      << global::convMatrix[2][0] * standardCart[X] + global::convMatrix[2][1] * standardCart[Y] + global::convMatrix[2][2] * standardCart[Z] << '\n';
+    //   	      << conv::convMatrix[2][0] * standardCart[X] + conv::convMatrix[2][1] * standardCart[Y] + conv::convMatrix[2][2] * standardCart[Z] << '\n';
     return result;
 }
 
 void CoordtoGPS(const Coord& c, float_type &longitude, float_type &latitude) // Converts a coordinate in our coordinate system to GPS longitude and latitude in radians
 {
     float_type standardCoord[3] = {};
-    standardCoord[X] = c.x * global::ourX[X] + c.y * global::ourY[X]; // Get the X value in standard basis
-    standardCoord[Y] = c.x * global::ourX[Y] + c.y * global::ourY[Y]; // Get the Y value in standard basis
-    standardCoord[Z] = c.x * global::ourX[Z] + c.y * global::ourY[Z]; // Get the Z value in standard basis
+    standardCoord[X] = c.x * conv::ourX[X] + c.y * conv::ourY[X]; // Get the X value in standard basis
+    standardCoord[Y] = c.x * conv::ourX[Y] + c.y * conv::ourY[Y]; // Get the Y value in standard basis
+    standardCoord[Z] = c.x * conv::ourX[Z] + c.y * conv::ourY[Z]; // Get the Z value in standard basis
     // Shift the origin back to the center of the Earth
-    standardCoord[X] += global::refCart[X];
-    standardCoord[Y] += global::refCart[Y];
-    standardCoord[Z] += global::refCart[Z];
+    standardCoord[X] += conv::refCart[X];
+    standardCoord[Y] += conv::refCart[Y];
+    standardCoord[Z] += conv::refCart[Z];
     longitude = atan2(standardCoord[Y], standardCoord[X]);
     latitude = asin(standardCoord[Z] / EARTH_RADIUS);
 }
@@ -165,35 +165,35 @@ void CoordtoGPS(const Coord& c, float_type &longitude, float_type &latitude) // 
 void computeBasis() // Compute our basis vectors based on the given reference point
 {
     // Compute our Z basis vector
-    global::ourZ = global::refCart;
-    float_type length = sqrt(global::ourZ[X] * global::ourZ[X] + global::ourZ[Y] * global::ourZ[Y] + global::ourZ[Z] * global::ourZ[Z]);
+    conv::ourZ = conv::refCart;
+    float_type length = sqrt(conv::ourZ[X] * conv::ourZ[X] + conv::ourZ[Y] * conv::ourZ[Y] + conv::ourZ[Z] * conv::ourZ[Z]);
     // Compute our X basis vector using equation of the plane at reference point
-    global::ourX[X] = (1.0);
-    global::ourX[Y] = (0);
-    global::ourX[Z] = ((global::ourZ[X] * global::refCart[X] - global::ourZ[X] * global::ourX[X] + global::ourZ[Y] * global::refCart[Y] - global::ourZ[Y] * global::ourX[Y] + global::ourZ[Z] * global::refCart[Z]) / global::ourZ[Z]);
-    // Make our X the positional vector anchored at global::refCart and pointing towards the point we just calculated on the plane
-    global::ourX[X] -= global::refCart[X];
-    global::ourX[Y] -= global::refCart[Y];
-    global::ourX[Z] -= global::refCart[Z];
+    conv::ourX[X] = (1.0);
+    conv::ourX[Y] = (0);
+    conv::ourX[Z] = ((conv::ourZ[X] * conv::refCart[X] - conv::ourZ[X] * conv::ourX[X] + conv::ourZ[Y] * conv::refCart[Y] - conv::ourZ[Y] * conv::ourX[Y] + conv::ourZ[Z] * conv::refCart[Z]) / conv::ourZ[Z]);
+    // Make our X the positional vector anchored at conv::refCart and pointing towards the point we just calculated on the plane
+    conv::ourX[X] -= conv::refCart[X];
+    conv::ourX[Y] -= conv::refCart[Y];
+    conv::ourX[Z] -= conv::refCart[Z];
     // Cross our X and our Z to get our Y
-    global::ourY[X] = (global::ourZ[Y] * global::ourX[Z] - global::ourZ[Z] * global::ourX[Y]);
-    global::ourY[Y] = (-(global::ourZ[X] * global::ourX[Z] - global::ourZ[Z] * global::ourX[X]));
-    global::ourY[Z] = (global::ourZ[X] * global::ourX[Y] - global::ourZ[Y] * global::ourX[X]);
+    conv::ourY[X] = (conv::ourZ[Y] * conv::ourX[Z] - conv::ourZ[Z] * conv::ourX[Y]);
+    conv::ourY[Y] = (-(conv::ourZ[X] * conv::ourX[Z] - conv::ourZ[Z] * conv::ourX[X]));
+    conv::ourY[Z] = (conv::ourZ[X] * conv::ourX[Y] - conv::ourZ[Y] * conv::ourX[X]);
     // Scale basis vectors to unit length
-    for (unsigned int i = 0; i < global::ourZ.size(); ++i)
-	global::ourZ[i] /= length;
-    length = sqrt(global::ourX[X] * global::ourX[X] + global::ourX[Y] * global::ourX[Y] + global::ourX[Z] * global::ourX[Z]);
-    for (unsigned int i = 0; i < global::ourX.size(); ++i)
-	global::ourX[i] /= length;
-    length = sqrt(global::ourY[X] * global::ourY[X] + global::ourY[Y] * global::ourY[Y] + global::ourY[Z] * global::ourY[Z]);
-    for (unsigned int i = 0; i < global::ourY.size(); ++i)
-	global::ourY[i] /= length;
+    for (unsigned int i = 0; i < conv::ourZ.size(); ++i)
+	conv::ourZ[i] /= length;
+    length = sqrt(conv::ourX[X] * conv::ourX[X] + conv::ourX[Y] * conv::ourX[Y] + conv::ourX[Z] * conv::ourX[Z]);
+    for (unsigned int i = 0; i < conv::ourX.size(); ++i)
+	conv::ourX[i] /= length;
+    length = sqrt(conv::ourY[X] * conv::ourY[X] + conv::ourY[Y] * conv::ourY[Y] + conv::ourY[Z] * conv::ourY[Z]);
+    for (unsigned int i = 0; i < conv::ourY.size(); ++i)
+	conv::ourY[i] /= length;
     // Compute the conversion matrix by inverting the standard matrix
     float_type standardMatrix[3][3] =
 	{
-	    {global::ourX[X], global::ourY[X], global::ourZ[X]},
-	    {global::ourX[Y], global::ourY[Y], global::ourZ[Y]},
-	    {global::ourX[Z], global::ourY[Z], global::ourZ[Z]}
+	    {conv::ourX[X], conv::ourY[X], conv::ourZ[X]},
+	    {conv::ourX[Y], conv::ourY[Y], conv::ourZ[Y]},
+	    {conv::ourX[Z], conv::ourY[Z], conv::ourZ[Z]}
 	};
     float_type determinate = (standardMatrix[0][0] * (standardMatrix[1][1] * standardMatrix[2][2] - standardMatrix[1][2] * standardMatrix[2][1])) -
 	(standardMatrix[0][1] * (standardMatrix[1][0] * standardMatrix[2][2] - standardMatrix[1][2] * standardMatrix[2][0])) +
@@ -201,22 +201,22 @@ void computeBasis() // Compute our basis vectors based on the given reference po
     for (unsigned int i = 0; i < 3; ++i) // Transpose the standard matrix
 	for (unsigned int j = i; j < 3; ++j)
 	    std::swap(standardMatrix[i][j], standardMatrix[j][i]);
-    global::convMatrix[0][0] = standardMatrix[1][1] * standardMatrix[2][2] - standardMatrix[1][2] * standardMatrix[2][1];
-    global::convMatrix[0][1] = standardMatrix[1][0] * standardMatrix[2][2] - standardMatrix[1][2] * standardMatrix[2][0];
-    global::convMatrix[0][2] = standardMatrix[1][0] * standardMatrix[2][1] - standardMatrix[1][1] * standardMatrix[2][0];
-    global::convMatrix[1][0] = standardMatrix[0][1] * standardMatrix[2][2] - standardMatrix[0][2] * standardMatrix[2][1];
-    global::convMatrix[1][1] = standardMatrix[0][0] * standardMatrix[2][2] - standardMatrix[0][2] * standardMatrix[2][0];
-    global::convMatrix[1][2] = standardMatrix[0][0] * standardMatrix[2][1] - standardMatrix[0][1] * standardMatrix[2][0];
-    global::convMatrix[2][0] = standardMatrix[0][1] * standardMatrix[1][2] - standardMatrix[0][2] * standardMatrix[1][1];
-    global::convMatrix[2][1] = standardMatrix[0][0] * standardMatrix[1][2] - standardMatrix[0][2] * standardMatrix[1][0];
-    global::convMatrix[2][2] = standardMatrix[0][0] * standardMatrix[1][1] - standardMatrix[0][1] * standardMatrix[1][0];
+    conv::convMatrix[0][0] = standardMatrix[1][1] * standardMatrix[2][2] - standardMatrix[1][2] * standardMatrix[2][1];
+    conv::convMatrix[0][1] = standardMatrix[1][0] * standardMatrix[2][2] - standardMatrix[1][2] * standardMatrix[2][0];
+    conv::convMatrix[0][2] = standardMatrix[1][0] * standardMatrix[2][1] - standardMatrix[1][1] * standardMatrix[2][0];
+    conv::convMatrix[1][0] = standardMatrix[0][1] * standardMatrix[2][2] - standardMatrix[0][2] * standardMatrix[2][1];
+    conv::convMatrix[1][1] = standardMatrix[0][0] * standardMatrix[2][2] - standardMatrix[0][2] * standardMatrix[2][0];
+    conv::convMatrix[1][2] = standardMatrix[0][0] * standardMatrix[2][1] - standardMatrix[0][1] * standardMatrix[2][0];
+    conv::convMatrix[2][0] = standardMatrix[0][1] * standardMatrix[1][2] - standardMatrix[0][2] * standardMatrix[1][1];
+    conv::convMatrix[2][1] = standardMatrix[0][0] * standardMatrix[1][2] - standardMatrix[0][2] * standardMatrix[1][0];
+    conv::convMatrix[2][2] = standardMatrix[0][0] * standardMatrix[1][1] - standardMatrix[0][1] * standardMatrix[1][0];
     for (unsigned int i = 0; i < 3; ++i)
 	for (unsigned int j = 0; j < 3; ++j)
-	    global::convMatrix[i][j] /= determinate;
-    global::convMatrix[0][1] *= -1;
-    global::convMatrix[1][0] *= -1;
-    global::convMatrix[1][2] *= -1;
-    global::convMatrix[2][1] *= -1;
+	    conv::convMatrix[i][j] /= determinate;
+    conv::convMatrix[0][1] *= -1;
+    conv::convMatrix[1][0] *= -1;
+    conv::convMatrix[1][2] *= -1;
+    conv::convMatrix[2][1] *= -1;
 }
 
 

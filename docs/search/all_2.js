@@ -8,7 +8,7 @@ var searchData=
   ['computestates_11',['computeStates',['../_polygon_8cpp.html#a32400b851831f6e0cd8f1f52ba98fc5e',1,'Polygon.cpp']]],
   ['config_2eh_12',['Config.h',['../_config_8h.html',1,'']]],
   ['conversions_2ecpp_13',['Conversions.cpp',['../_conversions_8cpp.html',1,'']]],
-  ['convmatrix_14',['convMatrix',['../_conversions_8cpp.html#ab4ae4d50212e756e125b9c68b3933735',1,'global']]],
+  ['convmatrix_14',['convMatrix',['../_conversions_8cpp.html#a1238cf262dcbf59bf2148e745f097c91',1,'conv']]],
   ['coord_15',['Coord',['../struct_coord.html',1,'Coord'],['../struct_coord.html#accf06ebfd424331f922b8469c7f4c586',1,'Coord::Coord()']]],
   ['coordtogps_16',['CoordtoGPS',['../_conversions_8cpp.html#a2687de23965eca645087415a47e0fab6',1,'Conversions.cpp']]],
   ['correction_17',['CORRECTION',['../_config_8h.html#a6b2cea537eda125cb3b39529ca4696f7',1,'Config.h']]],
