@@ -140,11 +140,11 @@ Coord GPStoCoord(const float_type longitude, const float_type latitude) // Conve
     standardCart[Z] -= global::refCart[Z];
     // Convert to our basis vectors
     // Because of how we defined our basis vectors, we should be able to disregard the resulting Z-coordinate since it will be approximately 0
-    result.x = global::convMatrix[0][0] * standardCart[X] + global::convMatrix[0][1] * standardCart[Y] + global::convMatrix[0][2] + standardCart[Z];
+    result.x = global::convMatrix[0][0] * standardCart[X] + global::convMatrix[0][1] * standardCart[Y] + global::convMatrix[0][2] * standardCart[Z];
     result.y = global::convMatrix[1][0] * standardCart[X] + global::convMatrix[1][1] * standardCart[Y] + global::convMatrix[1][2] * standardCart[Z];
     // std::cout statement for debugging
     // std::cout << "After conversion: " << result.x << ", " << result.y << ", "
-    //  	      << global::convMatrix[2][0] * standardCart[X] + global::convMatrix[2][1] * standardCart[Y] + global::convMatrix[2][2] * standardCart[Z] << '\n';
+    //   	      << global::convMatrix[2][0] * standardCart[X] + global::convMatrix[2][1] * standardCart[Y] + global::convMatrix[2][2] * standardCart[Z] << '\n';
     return result;
 }
 
