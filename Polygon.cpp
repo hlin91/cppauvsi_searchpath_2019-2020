@@ -487,8 +487,11 @@ struct Polygon
      * @return the approximate center of the polygon as a Coord
      * @see Coord
      */
-    Coord center() const // Return the center of the bounding box for the polygon
+    Coord center() const
     {
+        // Return the center of the bounding box for the polygon
+        // This is a fairly brittle approximation. For better results,
+        // Find the intersection of all angle bisectors
         float_type xMin, xMax;
         float_type yMin, yMax;
         xMin = xMax = v[0].x;
