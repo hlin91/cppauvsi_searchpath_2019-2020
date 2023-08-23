@@ -1,0 +1,3 @@
+C:/Users/Administrator/Desktop/cppauvsi_searchpath_2019-2020-master/out/build/x64-Debug/CMakeFiles/CppUAV.dir
+C:/Users/Administrator/Desktop/cppauvsi_searchpath_2019-2020-master/out/build/x64-Debug/CMakeFiles/edit_cache.dir
+C:/Users/Administrator/Desktop/cppauvsi_searchpath_2019-2020-master/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
