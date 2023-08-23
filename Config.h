@@ -8,19 +8,19 @@
 /**
  * @brief The resulting search path will be written to this file.
  */
-#define OUT_FILE "C:\\Users\\Public\\Downloads\\AUVSI-MissionPlanner-2020-2021\\flightplan\\mission\\MissionPointsWithSearch.txt"
+#define OUT_FILE "C:\\Users\\Administrator\\Desktop\\cppauvsi_searchpath_2019-2020-master\\MissionPointsWithSearch.txt"
 /**
  * @brief The initial mission points are read from this file.
  */
-#define MISSION_FILE "C:\\Users\\Public\\Downloads\\AUVSI-MissionPlanner-2020-2021\\flightplan\\mission\\MissionPointsParsed.txt"
+#define MISSION_FILE "C:\\Users\\Administrator\\Desktop\\cppauvsi_searchpath_2019-2020-master\\MissionPointsParsed.txt"
 /**
  * @brief The coordinates of the boundary polygon are read from this file.
  */
-#define BOUNDS_FILE "C:\\Users\\Public\\Downloads\\AUVSI-MissionPlanner-2020-2021\\flightplan\\mission\\BoundaryPoints.txt"
+#define BOUNDS_FILE "C:\\Users\\Administrator\\Desktop\\cppauvsi_searchpath_2019-2020-master\\BoundaryPoints.txt"
 /**
  * The coordinates of the search area are read from this file.
  */
-#define SEARCH_FILE "C:\\Users\\Public\\Downloads\\AUVSI-MissionPlanner-2020-2021\\flightplan\\mission\\SearchGridParsed.txt"
+#define SEARCH_FILE "C:\\Users\\Administrator\\Desktop\\cppauvsi_searchpath_2019-2020-master\\SearchGridParsed.txt"
 /**
  * The output altitude of the drone for the search path in feet.
  */

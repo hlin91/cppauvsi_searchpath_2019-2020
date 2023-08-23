@@ -6,8 +6,8 @@
  * @author Harvey Lin
  */
 
-#include "Polygon.cpp"
-#include "Conversions.cpp"
+#include "Polygon.h"
+#include "Conversions.h"
 #include <cctype>
 #include <iomanip>
 
